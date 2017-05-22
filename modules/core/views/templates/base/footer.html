@@ -1,0 +1,66 @@
+
+
+
+			<!-- FIM MAIN-CONTAINER  -->
+			</div>
+		<!-- FIM BIG-CONTAINER  -->
+		</div>
+
+
+
+
+
+
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+
+		var appInstance = angular.module('pencilblueApp');
+		
+		appInstance.requires.push('ngMaterial','ngMessages');
+
+		appInstance.controller('telatronController', function($scope, $timeout, $mdSidenav, $log) {
+			var self = this;
+     		this.fire = function(pass){alert(pass)};
+
+		    this.openMenu = function($mdOpenMenu, ev) {
+		      $mdOpenMenu(ev);
+		    };
+		    
+
+		  /*  this.closeMenu = function(event){
+		    	console.log('teste')
+		    	$mdMenu.hide();
+		    }
+		    this.noop = function(event){
+		    	event.stopImmediatePropagation();
+		    };*/
+
+		    self.abrirSubMenu = function(item){
+		    	if(item.aberto === undefined){
+		    		if(item.active){
+				    	item.aberto = false;
+		    		}else{
+				    	item.aberto = true;
+		    		}
+		    	}else{
+			    	item.aberto = !item.aberto;
+		    	}
+		    };
+
+		    self.toggle = function(componentId){$mdSidenav(componentId).toggle()};
+		    //this.tested = true;
+		    this.alert = function(val){alert(val)};
+		    //this.test = function(text){this.tested = !this.tested; };
+		    this.toggleLeft = function(){$mdSidenav('leftTools').toggle()};
+		    this.toggleRight = function(){$mdSidenav('rightTools').toggle()};
+
+		})
+
+		^tmp_base=paletas^;
+
+
+  </script>
+
+  
+</body>
+</html>

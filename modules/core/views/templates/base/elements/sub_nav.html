@@ -1,0 +1,28 @@
+      <div>
+      	<md-toolbar class="md-whiteframe-z2"  layout="row">
+      		<div class="md-toolbar-tools">
+
+      			<md-button ng-href="{{pill.href}}" ng-repeat="pill in pills track by pill.name" ng-click="buttonPills(pill.name)" ng-cloak aria-label="pill.title">
+      				<md-icon ng-if="pill.icon.length > 0" md-font-library="material-icons">{{pill.icon}}</md-icon>
+      				<span hide-xs hide-sm ng-if="pill.title.length > 0" ng-bind="pill.title"></span>
+      				<span hide-xs hide-sm ng-if="pill.title.length <= 0" ng-bind="pill.icon"></span>
+      			</md-button>
+      			
+      			<h2 class="rsi-padding-8" >
+      				{{subNav.title}}
+      			</h2>
+
+      			<span flex></span>
+                        
+                      
+
+      			<md-button ng-if="subNav.rightButton" ng-hide="subNav.rightButton.requirePermission && !currentUser.representante || subNav.rightButton.hide" md-position-mode="right bottom" ng-disabled="dialogAberto" ng-click="subnavClick($event)" >
+      				<md-icon ng-if="subNav.rightButton.icon" md-font-library="material-icons">{{subNav.rightButton.icon}}</md-icon>
+      				<span hide-xs>{{subNav.rightButton.title}}</span>
+      			</md-button>
+
+      		</div>
+      	</md-toolbar>
+
+
+      </div>

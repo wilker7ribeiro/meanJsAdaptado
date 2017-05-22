@@ -1,0 +1,35 @@
+<!-- LEFT SIDENAV -->
+<md-sidenav 
+class="md-sidenav-left"
+md-component-id="leftTools"
+md-is-locked-open="$mdMedia('gt-sm')"
+md-whiteframe="2"
+ng-if="!leftToolsNavClose"
+>
+<div ng-controller="telatronController as ctrl">
+	<md-toolbar ng-href="/gestaocliente/{{currentUser.admin ? cliente._id : 'cliente'}}/view" class="md-hue-3 md-whiteframe-z2" layout-align="center center">
+		<span>{{(cliente.name| limitTo :16) + (cliente.name.length > 16 ? '...' : '')}}</span>
+		<md-tooltip ng-if="cliente.name.length > 16" class="tooltip-wordbreak">{{cliente.name}}</md-tooltip>
+	</md-toolbar>
+	<div>
+		<a ng-href="/gestaocliente/{{currentUser.admin ? cliente._id : 'cliente'}}/view">
+			<img md-whiteframe="3" ng-src="{{cliente.photo || '/img/cliente.png'}}" class="rsi-left-menu-img"/>
+		</a>
+	</div>
+	<md-list>
+<!--  
+        md-colors=" navItem.active ? {'border-left-color':'primary-hue-3-1', 'background': 'primary-hue-3-0.08'} : {}"
+    -->
+    <span ng-repeat="navItem in navigation.children" ng-cloak>
+    	<md-list-item 
+    	ng-class="{'md-active md-whiteframe-1dp rsi-left-menu-active': navItem.active}" ng-href="{{navItem.href}}" ng-cloak>
+    	<md-icon md-font-library="material-icons">{{navItem.icon}}</md-icon>
+    	<span flex>{{navItem.title}}</span>
+    </md-list-item>
+</span>
+
+
+</md-list>
+</div>
+</md-sidenav>
+<!-- FIM LEFT SIDENAV -->

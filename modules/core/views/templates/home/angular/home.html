@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    angular.module('pencilblueApp', [])
+    .controller('PencilBlueController', function($scope, $http, $timeout, $window, $mdDialog) {
+        $scope.deleteNameKey = 'name'
+        ^angular_objects^
+
+        $scope.mostrarDialogDeixarOrganizacao = function (ev){
+            $scope.dialogAberto = true;
+            $mdDialog.show({
+                contentElement: '#sairPrompt',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                onRemoving : function(event,removePromise){
+                    delete $scope.membroLoginOuEmail
+                    $scope.dialogAberto = false;
+                }
+            });
+        }
+        $scope.fecharDialog = function(){
+            $mdDialog.cancel();
+        }
+
+    
+        $scope.sair = function(){
+            $scope.saindo = true;
+            $http.post('/gestaocliente/'+($scope.currentUser.admin ? $scope.cliente._id : 'cliente')+'/actions/sair')
+            .success(function(result) {
+                $scope.saindo = false;
+                $scope.successMessage = result.message;
+                //$('#confirm_delete_modal').modal('hide');
+                $timeout(function(){
+                    $window.location = "/gestaocliente/cliente/new"
+                },800);
+
+            })
+            .error(function(error, status) {
+                $scope.saindo = false;
+                $scope.errorMessage = error.message;
+                //$('#confirm_delete_modal').modal('hide');
+            });
+        }
+
+    });
+</script>

@@ -1,0 +1,64 @@
+<!-- TOOLBAR -->
+<div id="header-container" ng-controller="telatronController as ctrl">
+  <md-toolbar class="md-menu-toolbar md-whiteframe-4dp">
+    <div class="md-toolbar-tools">
+
+      <md-button hide-gt-sm class="md-icon-button" ng-click="ctrl.toggle('leftTools',$mdSidenav, $event)">
+        <md-icon md-font-library="material-icons">menu</md-icon>
+      </md-button>
+
+        <a href="^site_root^" >
+            <img id="site-logo" src="^site_logo^" />
+        </a>
+
+      <h2 hide-xs hide-sm class="md-padding" >
+        ^site_name^
+      </h2>
+
+      <div flex layout="row" layout-align="center center">
+        <!-- <span hide-xs>Carregando</span>
+        <div layout="row" layout-align="space-around">
+        <md-progress-circular md-diameter="20px" md-mode="indeterminate"></md-progress-circular>
+        </div> -->
+      </div>
+
+      <md-menu ng-if="sistemas && sistemas.length" md-position-mode="right bottom">
+       
+        <md-button class="rsi-botao-pequeno" aria-label="^loc_SISTEMAS^" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+         <span hide-sm hide-xs>^loc_SISTEMAS^</span>
+         <md-icon hide-gt-sm md-font-library="material-icons">device_hub</md-icon>
+         <md-icon md-font-library="material-icons">keyboard_arrow_down</md-icon>
+        </md-button>
+        <md-menu-content width="4">
+          <md-menu-item ng-repeat="sistema in sistemas">
+            <md-button ng-href="/gestaocliente/{{currentUser.admin ? cliente._id : 'cliente'}}/sistema/{{sistema._id}}/dashboard">
+              <span>{{sistema.name}}</span>
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+
+      <md-menu md-position-mode="right bottom">
+        <md-button class="rsi-botao-pequeno" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+          <md-icon md-font-library="material-icons">person</md-icon>
+          <md-icon md-font-library="material-icons">keyboard_arrow_down</md-icon>
+        </md-button>
+        <md-menu-content width="4">
+
+        ^account_buttons^
+
+        </md-menu-content>
+      </md-menu>
+
+
+
+<!-- AINDA NAO UTILIZADO
+      <md-button class="md-icon-button" ng-click="ctrl.toggle('rightTools',$mdSidenav, $event)">
+        <md-icon md-font-library="material-icons">format_list_bulleted</md-icon>
+      </md-button>
+-->
+    </div>
+  </md-toolbar>
+</div>
+<!-- FIM TOOLBAR -->
+

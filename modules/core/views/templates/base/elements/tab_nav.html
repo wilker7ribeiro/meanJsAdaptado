@@ -1,0 +1,11 @@
+
+
+<md-tabs ng-cloak md-dynamic-height md-border-bottom md-selected="telatronTabs.selectedIndex">
+	<md-tab class=" {{tab.active}}" ng-href="{{tab.href}}" ng-repeat="tab in tabs" ng-cloak>
+		<md-tab-label>
+			<md-icon md-font-library="material-icons">settings</md-icon>
+			<span ng-bind="tab.title"></span>
+		</md-tab-label>
+	</md-tab>
+</md-tabs>
+
