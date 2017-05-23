@@ -40,22 +40,56 @@
 
 	  return output;
 	};
-
+	var coreStrings = {}
 	class TemplateService {
 		constructor(loc, modulo){
 			this.listaStringsSalvas = {};
 			this.loc = loc || "pt_BR";
 			this.modulo = modulo || 'core';
 		}
-
-		getArquivoStrings (loc){
-			try{
-				var jsonStrings = fs.readFileSync(this.getLocStringsFilePath()+loc+".json");
-			} catch(err){
-
-				var jsonStrings = fs.readFileSync(this.getLocStringsFilePath()+"pt_BR"+".json");
+		static init(){
+			var regex = /\/(.._..)\.json/;
+			var coreStringsPath = getGlobbedPaths("modules/core/strings/*.json")
+			for (var i = coreStringsPath.length - 1; i >= 0; i--) {
+				console.log(coreStringsPath[i])
+				var linguagem = regex.exec(coreStringsPath[i])[1]
+				coreStrings[linguagem] = JSON.parse(fs.readFileSync(coreStringsPath[i]).toString())
 			}
-			return jsonStrings;
+			console.log(coreStrings)
+		}
+
+		getArquivoLocalizado (){
+
+		}
+		getStringLocalizada (flag, loc){
+			var preferivelPath = getGlobbedPaths("modules/"+(this.modulo || 'core')+"/strings/"+loc+".json")
+			console.log(preferivelPath)
+			var jsonStrings = {}
+			if(preferivelPath.length) {
+				var stringModulo = JSON.parse(fs.readFileSync(preferivelPath[0]).toString())[flag.toUpperCase()];
+			} 
+			var corePath = getGlobbedPaths("modules/core/strings/"+loc+".json")
+			if(corePath.length) {
+				var jsonStringsCore = JSON.parse(fs.readFileSync(corePath[0]).toString());
+			} 
+
+			var possiveisPaths = getGlobbedPaths("modules/!(core)/strings/"+loc+".json")
+			console.log(possiveisPaths)
+			if(possiveisPaths.length) {
+				var jsonStringsOutros = {};
+				for (var i = possiveisPaths.length - 1; i >= 0; i--) {
+					Object.assign(JSON.parse(jsonStringsOutros, fs.readFileSync(possiveisPaths[i]).toString()));
+				}
+				
+			}
+			Object.assign(jsonStringsOutros, jsonStringsCore);
+			Object.assign(jsonStringsCore, jsonStrings);
+				
+				var jsonStrings = fs.readFileSync(STRINGS_FILES_PATH+loc+".json");
+			
+				var jsonStrings = fs.readFileSync(STRINGS_FILES_PATH+"pt_BR"+".json");
+			
+			return JSON.parse(jsonStrings.toString());
 		}
 
 
@@ -76,34 +110,31 @@
 		}
 
 		processarTemplate (flag){
-			//console.log(flag)
 			var content;
 			var self = this;
 			flag = flag.substring(4, flag.length);
 			var path = flag.replace(/=/g,"/");
-			try {
-				
-				content = fs.readFileSync(this.getTemplatePath()+path+FILE_SUFFIX).toString();
-			} catch (err){
-				return "^"+path+"^"
-			}
+			var filePath = this.getTemplatePath(path)
 
-			content = content.replace(REGEX_TEMPLATE_SERVICE, function(match,capture){
-				return self.replaceAuto(match, capture)
-			})
-			return content;
+			if(filePath){
+				content = fs.readFileSync(filePath).toString();
+				content = content.replace(REGEX_TEMPLATE_SERVICE, function(match,capture){
+					return self.replaceAuto(match, capture)
+				})
+				return content;
+				
+			} 
+			return "^"+path+"^"
 		}
 
 
 		processarMatchTemplate(flag){
-			console.log(flag)
 			return this.processarTemplate(flag, this.loc);
 		}
 
 		processarMatchLocString(flag){
 			flag = flag.substring(4, flag.length);
-
-			return this.getArquivoStrings(this.loc)[flag.toUpperCase()] || flag
+			return this.getStringLocalizada(flag, this.loc)
 		}
 
 		processarMatchString(flag){
@@ -156,17 +187,27 @@
 		registrarLoc(key, value){
 			this.listaStringsSalvas[key] = value;
 		}
-		getTemplatePath(){
-			return TEMPLATE_PATH;
-		}
-		getLocStringsFilePath(){
-			return STRINGS_FILES_PATH;
+
+		getTemplatePath(filePath){
+			var preferivelPath = getGlobbedPaths("modules/"+this.modulo+"/views/templates/"+filePath+FILE_SUFFIX)
+			if(preferivelPath.length) {
+				return preferivelPath[0];
+			} 
+			var corePath = getGlobbedPaths("modules/core/views/templates/"+filePath+FILE_SUFFIX)
+			if(corePath.length) {
+				return corePath[0];
+			} 
+			var possiveisPaths = getGlobbedPaths("modules/*/views/templates/"+filePath+FILE_SUFFIX)
+			if(possiveisPaths.length) {
+				return possiveisPaths[0]
+			}
+			return false;	
 		}
 		getModulePath(){
 
 		}
-		setModulo(){
-
+		setModulo(module){
+			this.modulo = module;
 		}
 
 	}
@@ -175,9 +216,9 @@
 	var REGEX_TEMPLATE_SERVICE = /\^(\S*)\^/gm;
 	var TEMPLATE_FLAG = "tmp_";
 	var LOCALIZADED_STRING_FLAG = "loc_";
-	console.log(getGlobbedPaths("modules/*/views/**/*.html"))
-	var TEMPLATE_PATH = "modules/core/views/template/";//getGlobbedPaths("modules/*/views/*.html").concat(getGlobbedPaths("modules/*/views/**/.html"));;
-	var STRINGS_FILES_PATH = "modules/core/client/strings/";
+	
+	var TEMPLATE_PATH = "modules/core/views/templates/";//getGlobbedPaths("modules/*/views/*.html").concat(getGlobbedPaths("modules/*/views/**/.html"));;
+	var STRINGS_FILES_PATH = "modules/core/strings/";
 
 	
 

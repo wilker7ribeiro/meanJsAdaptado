@@ -7,7 +7,8 @@ var _ = require('lodash'),
   chalk = require('chalk'),
   glob = require('glob'),
   fs = require('fs'),
-  path = require('path');
+  path = require('path'),
+  TemplateService = require('./lib/TemplateService')
 
 /**
  * Get files by glob patterns
@@ -216,6 +217,8 @@ var initGlobalConfig = function () {
 
   // Print a warning if config.domain is not set
   validateDomainIsSet(config);
+
+  TemplateService.init();
 
   // Expose configuration utilities
   config.utils = {
