@@ -195,7 +195,7 @@ module.exports.initModulesServerRoutes = function (app) {
     require(path.resolve(routePath))(app);
   });
    // ERROR HANDLING
-  app.route('/server-error').get(core.renderServerError);
+  //app.route('/server-error').get(core.renderServerError);
   app.route('/:url(api|modules|lib)/*').get(core.renderNotFound);
   app.route('/*').get(core.renderNotFound);
 };
@@ -211,10 +211,13 @@ module.exports.initErrorRoutes = function (app) {
     }
 
     // Log it
-    console.error(err.stack);
-
+    console.error(err.stack)
+    console.log('hue')
+    req.ts.registrarString('error', err.stack);
+    //req.url ='/server-error'
+    req.ts.load('modules/core/views/500', res, 500);
     // Redirect to error page
-    res.redirect('/server-error');
+    //res.redirect('/server-error');
   });
 };
 

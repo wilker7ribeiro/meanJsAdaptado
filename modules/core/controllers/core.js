@@ -24,7 +24,7 @@ exports.renderIndex = function (req, res) {
     };
   }
 
-  req.ts.registrarLoc('angular_objects', req.ts.prepararVariaveisAngular({
+  req.ts.registrarString('angular_objects', req.ts.prepararVariaveisAngular({
   	teste:123,
   	arrayobjs:[{obj1:1},{obj2:2}],
   	string:"4123",
@@ -38,12 +38,12 @@ exports.renderIndex = function (req, res) {
 /**
  * Render the server error page
  */
-exports.renderServerError = function (req, res) {
+/*exports.renderServerError = function (req, res) {
 	console.log('teste')
   res.status(500).render('modules/core/views/500', {
     error: 'Oops! Something went wrong...'
   });
-};
+};*/
 
 /**
  * Render the server not found responses

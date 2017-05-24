@@ -41,6 +41,7 @@
 	  return output;
 	};
 	var coreStrings = {}
+	var modulosStrings = {}
 	class TemplateService {
 		constructor(loc, modulo){
 			this.listaStringsSalvas = {};
@@ -48,27 +49,35 @@
 			this.modulo = modulo || 'core';
 		}
 		static init(){
-			var regex = /\/(.._..)\.json/;
+			var regex = /\/strings\/(.*)\.js.*/;
 			var coreStringsPath = getGlobbedPaths("modules/core/strings/*.json")
 			for (var i = coreStringsPath.length - 1; i >= 0; i--) {
-				console.log(coreStringsPath[i])
-				var linguagem = regex.exec(coreStringsPath[i])[1]
+				var linguagem = regex.exec(coreStringsPath[i])[1];
 				coreStrings[linguagem] = JSON.parse(fs.readFileSync(coreStringsPath[i]).toString())
 			}
-			console.log(coreStrings)
+			var modulosStringsPath = getGlobbedPaths("modules/!(core)/strings/*.json")
+			for (var i = modulosStringsPath.length - 1; i >= 0; i--) {
+				//console.log(JSON.parse(fs.readFileSync(modulosStringsPath[i]).toString()))
+				var linguagem = regex.exec(modulosStringsPath[i])[1];
+				modulosStrings[linguagem] = modulosStrings[linguagem] || {};
+				modulosStrings[linguagem] = Object.assign(modulosStrings[linguagem] , JSON.parse(fs.readFileSync(modulosStringsPath[i]).toString()));
+			}
 		}
 
 		getArquivoLocalizado (){
 
 		}
 		getStringLocalizada (flag, loc){
+			console.log(loc)
+			console.log(flag)
 			var preferivelPath = getGlobbedPaths("modules/"+(this.modulo || 'core')+"/strings/"+loc+".json")
-			console.log(preferivelPath)
 			var jsonStrings = {}
 			if(preferivelPath.length) {
-				var stringModulo = JSON.parse(fs.readFileSync(preferivelPath[0]).toString())[flag.toUpperCase()];
-			} 
-			var corePath = getGlobbedPaths("modules/core/strings/"+loc+".json")
+				var stringModulo = JSON.parse(fs.readFileSync(preferivelPath[0]).toString());
+				console.log(stringModulo)
+				if(stringModulo[flag.toUpperCase()]){ return stringModulo[flag.toUpperCase()]}
+			}
+			/*var corePath = getGlobbedPaths("modules/core/strings/"+loc+".json")
 			if(corePath.length) {
 				var jsonStringsCore = JSON.parse(fs.readFileSync(corePath[0]).toString());
 			} 
@@ -87,8 +96,8 @@
 				
 				var jsonStrings = fs.readFileSync(STRINGS_FILES_PATH+loc+".json");
 			
-				var jsonStrings = fs.readFileSync(STRINGS_FILES_PATH+"pt_BR"+".json");
-			
+				var jsonStrings = fs.readFileSync(STRINGS_FILES_PATH+"pt_BR"+".json");*/
+			return 'teste'
 			return JSON.parse(jsonStrings.toString());
 		}
 
@@ -138,6 +147,8 @@
 		}
 
 		processarMatchString(flag){
+			console.log(flag)
+			console.log(this.listaStringsSalvas)
 			return this.listaStringsSalvas[flag] || flag;
 		}
 
@@ -180,11 +191,13 @@
 			return tagsCss;
 		}
 
-		load(path, res){
-			res.render(path, {ts : this});
+		load(path, res,status){
+			console.log('TEMPLATE SERVICE')
+			console.log(this)
+			res.status(status || 200).render(path, {ts : this});
 		}
 
-		registrarLoc(key, value){
+		registrarString(key, value){
 			this.listaStringsSalvas[key] = value;
 		}
 

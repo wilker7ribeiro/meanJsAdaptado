@@ -14,7 +14,8 @@ function getCache(path){
 
 //COM CACHE
 module.exports = function (filePath, options, callback) { // define the template engine
-	var ts = options.ts || new TemplateService();
+	console.log(options)
+	var ts = options.ts;
 	//console.log(options)
 	
 	var cached = cache.get(filePath);
@@ -23,10 +24,10 @@ module.exports = function (filePath, options, callback) { // define the template
 	} 
 	else {
 		for(var key in options.reg){
-			ts.registrarLoc(key, options.reg[key]);
+			ts.registrarString(key, options.reg[key]);
 		}
-		ts.registrarLoc('importsJs', ts.prepararImportsJs(options.jsFiles));
-		ts.registrarLoc('importsCss', ts.prepararImportsCss(options.cssFiles));
+		ts.registrarString('importsJs', ts.prepararImportsJs(options.jsFiles));
+		ts.registrarString('importsCss', ts.prepararImportsCss(options.cssFiles));
 		ts.carregarPagina(filePath, function(err, content){
 			if (err){
 				return callback(err)
